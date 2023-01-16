@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "outDir": "dist",
+        "strict": true,
+        "lib": [
+            "ES2015",
+            "DOM"
+        ],
+        "downlevelIteration": true
+    },
+    "include": [
+        "src/**/*"
+    ],
+}

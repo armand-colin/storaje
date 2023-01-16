@@ -1,0 +1,21 @@
+{
+  "name": "storaje",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "author": "armand-colin <56818352+armand-colin@users.noreply.github.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "test": "mocha -r ts-node/register"
+  },
+  "dependencies": {
+    "typescript": "4.9.4"
+  },
+  "devDependencies": {
+    "@types/chai": "4.3.4",
+    "@types/mocha": "10.0.1",
+    "chai": "4.3.7",
+    "mocha": "10.2.0",
+    "ts-node": "10.9.1"
+  }
+}
