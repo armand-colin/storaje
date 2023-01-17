@@ -139,7 +139,7 @@ Observer.destroy()
 ```
 Destroys the observers, making it unable to get changes and cleaning all the binded callbacks.
 
-You can register to single objects using `store.observe`. This method takes either an id or a query as a parameter. The value of this observer will either be an object of `null`.
+You can register to single objects using `store.observe`. This method takes either an id or a query as a parameter. The value of this observer will either be an object or `null`.
 
 ```ts
 const observer = store.observe("some-id")
@@ -175,10 +175,10 @@ const observer = store.observe({ size: 10 })
 console.log(observer.value) // { id: "1", size: 10 }
 
 store.delete("1")
-console.log(observer.value) // null, event though the object with the id "4" would be a match
+console.log(observer.value) // null, even though the object with the id "4" would be a match
 ```
 
-To avoid this behaviour, if you encounter it, you can wrap an observerAll around an `ObserverReduced.first`, like this:
+To avoid this behaviour, you can wrap an `observerAll` around an `ObserverReduced.first`, like this:
 
 ```ts
 const store = new Store<{ id: string, size: number }>()
@@ -202,4 +202,4 @@ console.log(observer.value) // { id: "4", size: 10 }
 
 - React implementation
 - Document `ObserverReducer`
-- Enhance and simplify the reducer to be accessible directly on the observer
+- Enhance and simplify the reducer to be accessible directly on the observer class
