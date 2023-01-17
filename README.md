@@ -180,7 +180,7 @@ store.delete("1")
 console.log(observer.value) // null, even though the object with the id "4" would be a match
 ```
 
-To avoid this behaviour, you can wrap an `observerAll` around an `ObserverReduced.first`, like this:
+To avoid this behaviour, you can wrap an `observerAll` around an `ObserverMapper`, taking only the first element of the array - or null:
 
 ```ts
 const store = new Store<{ id: string, size: number }>()
@@ -192,12 +192,17 @@ store.update(
     { id: "4", size: 10 },
 );
 
-const observer = ObserverReducer.first(store.observeAll({ size: 10 }))
+const observer = new ObserverMapper(store.observeAll({ size: 10 }), array => array[0] ?? null)
 
 console.log(observer.value) // { id: "1", size: 10 }
 
 store.delete("1")
 console.log(observer.value) // { id: "4", size: 10 }
+```
+
+Note that there is also a shorthand version of this in the `Observer.array` utility functions:
+```ts
+const observer = Observer.array.first(store.observeAll({ size: 10 }))
 ```
 
 ## Roadmap

@@ -1,8 +1,7 @@
 import { describe, it } from "mocha";
-import { Store } from "../src";
+import { Store, ObserverMapper, Observer } from "../src";
 import { expect } from "chai";
 import { expectEqualArrays } from "./common";
-import { ObserverReducer } from "../src/ObserverReducer";
 
 function randomid() {
     return Math.random().toString().slice(3, 9)
@@ -102,7 +101,7 @@ describe("Store observers all", () => {
         const marc = Test.mock("marc", 15)
         store.update(jack, marc)
 
-        const observer = ObserverReducer.first(store.observeAll({ age: 15 }))
+        const observer = Observer.array.first(store.observeAll({ age: 15 }))
         expect(observer.value).to.equal(jack)
 
         store.delete(jack.id)

@@ -2,7 +2,7 @@ import { Observer } from "./Observer"
 import { ObserverAllManager } from "./ObserverAllManager"
 import { ObserverManager } from "./ObserverManager"
 
-export function match<T extends { id: string }>(object: T, filter: Query<T>) {
+export function match<T extends { id: Store.Id }>(object: T, filter: Query<T>) {
     for (const key in filter) {
         if (object[key as keyof T] !== filter[key as keyof Query<T>])
             return false
@@ -10,37 +10,13 @@ export function match<T extends { id: string }>(object: T, filter: Query<T>) {
     return true
 }
 
-function findIterable<T>(iterable: Iterable<T>, filter: (value: T) => boolean): T | null {
-    for (const item of iterable) {
-        if (filter(item))
-            return item
-    }
-    return null
-}
+export type Query<T extends { id: Store.Id }> = Partial<Omit<T, "id">>
 
-export type Query<T extends { id: string }> = Partial<Omit<T, "id">>
+export class Store<T extends { id: Store.Id }> {
 
-interface StoreConfig<T> {
-    clone: (value: T) => T
-}
-
-function defaultConfig<T>(): StoreConfig<T> {
-    return {
-        clone: object => ({ ...object })
-    }
-}
-
-export class Store<T extends { id: string }> {
-
-    _objects = new Map<string, T>()
+    _objects = new Map<Store.Id, T>()
     _observerManager = new ObserverManager<T>()
     _observerAllManager = new ObserverAllManager<T>()
-
-    _config: StoreConfig<T>
-
-    constructor() {
-        this._config = defaultConfig()
-    }
 
     public get size() {
         return this._objects.size
@@ -50,6 +26,7 @@ export class Store<T extends { id: string }> {
         const created: T[] = []
 
         let size = this._objects.size
+
         for (const object of objects) {
             this._objects.set(object.id, object)
             if (this._objects.size > size) {
@@ -63,8 +40,8 @@ export class Store<T extends { id: string }> {
         this._observerAllManager.notifyUpdate(objects, this.getAll())
     }
 
-    delete(...ids: string[]) {
-        const deletedIds: string[] = []
+    delete(...ids: Store.Id[]) {
+        const deletedIds: Store.Id[] = []
 
         for (const id of ids) {
             if (this._objects.delete(id))
@@ -82,7 +59,11 @@ export class Store<T extends { id: string }> {
     }
 
     find(query: Query<T>): T | null {
-        return findIterable(this._objects.values(), object => match(object, query))
+        for (const item of this._objects.values()) {
+            if (match(item, query))
+                return item
+        }
+        return null
     }
 
     // Get multiple elements
@@ -119,4 +100,12 @@ export class Store<T extends { id: string }> {
         return observer
     }
 
+}
+
+export namespace Store {
+    export type Id = string | number
+
+    export function isId(id: any): id is Id {
+        return (typeof id === "string") || (typeof id === "number")
+    }
 }

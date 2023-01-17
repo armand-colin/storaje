@@ -1,13 +1,13 @@
 import { Observer } from "./Observer"
-import { Query, match } from "./Store"
+import { Query, Store, match } from "./Store"
 
-interface QueryAllObserver<T extends { id: string }> {
+interface QueryAllObserver<T extends { id: Store.Id }> {
     observer: Observer<T[]>
     query: Query<T>
-    matches: Map<string, T>
+    matches: Map<Store.Id, T>
 }
 
-export class ObserverAllManager<T extends { id: string }> {
+export class ObserverAllManager<T extends { id: Store.Id }> {
 
     private _observersAll: Observer<T[]>[] = []
     private _observersQueryAll: QueryAllObserver<T>[] = []
@@ -28,7 +28,7 @@ export class ObserverAllManager<T extends { id: string }> {
         }
     }
 
-    notifyDelete(ids: string[], allEntities: T[]) {
+    notifyDelete(ids: Store.Id[], allEntities: T[]) {
         for (const observer of this._observersAllIterable()) {
             observer.set(allEntities)
         }
@@ -91,7 +91,7 @@ export class ObserverAllManager<T extends { id: string }> {
             return
         }
 
-        const matches = new Map<string, T>()
+        const matches = new Map<Store.Id, T>()
         for (const object of observer.value)
             matches.set(object.id, object)
 

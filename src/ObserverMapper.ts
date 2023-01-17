@@ -1,15 +1,11 @@
-import { Observer } from "./Observer";
+import { Observer } from "./Observer"
 
-export class ObserverReducer<T, U> extends Observer<U> {
-
-    public static first<V>(observer: Observer<V[]>): Observer<V | null> {
-        return new ObserverReducer(observer, values => values.length > 0 ? values[0] : null)
-    }
+export class ObserverMapper<T, U> extends Observer<U> {
 
     private _reducer: (value: T) => U
     private _observer: Observer<T>
 
-    private constructor(observer: Observer<T>, reducer: (value: T) => U) {
+    constructor(observer: Observer<T>, reducer: (value: T) => U) {
         super(reducer(observer.value))
         observer.bind(this._onChange)
         this._reducer = reducer

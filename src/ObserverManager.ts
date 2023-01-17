@@ -1,14 +1,14 @@
 import { Observer } from "./Observer"
-import { Query, match } from "./Store"
+import { Query, Store, match } from "./Store"
 
-interface QueryObserver<T extends { id: string }> {
+interface QueryObserver<T extends { id: Store.Id }> {
     observer: Observer<T | null>
     query: Query<T>
 }
 
-export class ObserverManager<T extends { id: string }> {
+export class ObserverManager<T extends { id: Store.Id }> {
 
-    _idObservers = new Map<string, Observer<T | null>[]>()
+    _idObservers = new Map<Store.Id, Observer<T | null>[]>()
     _queryObservers: QueryObserver<T>[] = []
 
     notifyUpdate(updated: T[]) {
@@ -40,7 +40,7 @@ export class ObserverManager<T extends { id: string }> {
         }
     }
 
-    notifyDelete(ids: string[]) {
+    notifyDelete(ids: Store.Id[]) {
         for (const id of ids) {
             for (const observer of this._idObserversIterable(id))
                 observer.set(null)
@@ -55,7 +55,7 @@ export class ObserverManager<T extends { id: string }> {
         }
     }
 
-    private *_idObserversIterable(id: string): Iterable<Observer<T | null>> {
+    private *_idObserversIterable(id: Store.Id): Iterable<Observer<T | null>> {
         const observers = this._idObservers.get(id)
         if (!observers)
             return
@@ -96,13 +96,13 @@ export class ObserverManager<T extends { id: string }> {
     }
 
     add(observer: Observer<T | null>, queryOrId: string | Query<T>) {
-        if (typeof queryOrId === "string")
+        if (Store.isId(queryOrId))
             this._addIdObserver(observer, queryOrId)
         else
             this._addQueryObserver(observer, queryOrId)
     }
 
-    _addIdObserver(observer: Observer<T | null>, id: string) {
+    _addIdObserver(observer: Observer<T | null>, id: Store.Id) {
         let observers = this._idObservers.get(id)
         if (observers === undefined) {
             observers = []
