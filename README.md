@@ -3,7 +3,9 @@
 ## A configurable model stack to implement in your favorite front-end framework
 
 The goal of **storage** is to give a very simple model implementation (like a database with events), that you can tweak and customize to fit your needs.  
+  
 Quite everything is based on two aspects: a `Store`, which is where you store your data, and `Observer`s, which allow you to register through data changes.  
+  
 In the future, there will be integrations with popular frameworks, such as Svelte and React, and also a way for you to keep this data in a persistent cache (through local storage, filesystem or real databases).
 
 ## Installation
