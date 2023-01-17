@@ -1,9 +1,14 @@
 {
   "name": "storaje",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.js",
   "author": "armand-colin <56818352+armand-colin@users.noreply.github.com>",
   "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/armand-colin/storaje"
+  },
   "private": false,
   "scripts": {
     "test": "mocha -r ts-node/register"
