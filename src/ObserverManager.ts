@@ -95,7 +95,7 @@ export class ObserverManager<T extends { id: Store.Id }> {
         }
     }
 
-    add(observer: Observer<T | null>, queryOrId: string | Query<T>) {
+    add(observer: Observer<T | null>, queryOrId: Store.Id | Query<T>) {
         if (Store.isId(queryOrId))
             this._addIdObserver(observer, queryOrId)
         else

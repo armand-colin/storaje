@@ -1,5 +1,5 @@
-import { describe, it } from "mocha";
-import { Store, ObserverMapper, Observer } from "../src";
+import { Store } from "../src";
+import { Observer } from "../src";
 import { expect } from "chai";
 import { expectEqualArrays } from "./common";
 

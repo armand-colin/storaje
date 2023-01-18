@@ -1,7 +1,5 @@
 import { Store, Query } from './Store'
-import { Observer } from './Observer'
-import { ObserverMapper } from './ObserverMapper'
-import { ObserverFilter } from './ObserverFilter'
+import { Observer, ObserverFilter, ObserverMapper } from './Observer'
 
 export { 
     Store,

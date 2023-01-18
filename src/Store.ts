@@ -54,7 +54,7 @@ export class Store<T extends { id: Store.Id }> {
     }
 
     // Get single elements
-    get(id: string): T | null {
+    get(id: Store.Id): T | null {
         return this._objects.get(id) ?? null
     }
 
@@ -76,8 +76,8 @@ export class Store<T extends { id: Store.Id }> {
     }
 
     // observers
-    observe(queryOrId: string | Query<T>): Observer<T | null> {
-        const value = typeof queryOrId === "string" ?
+    observe(queryOrId: Store.Id | Query<T>): Observer<T | null> {
+        const value = Store.isId(queryOrId) ?
             this.get(queryOrId) :
             this.find(queryOrId)
 

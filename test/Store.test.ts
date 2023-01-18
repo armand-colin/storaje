@@ -1,4 +1,3 @@
-import { describe, it } from "mocha";
 import { Store } from "../src";
 import { expect } from "chai";
 
