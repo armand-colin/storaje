@@ -16,6 +16,7 @@
   },
   "private": false,
   "scripts": {
+    "prepare": "tsc",
     "build": "tsc",
     "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/esm test/**/*.test.ts"
   },
