@@ -1,6 +1,6 @@
 {
   "name": "storaje",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/index.js",
   "author": "armand-colin <56818352+armand-colin@users.noreply.github.com>",
   "license": "MIT",
@@ -14,7 +14,6 @@
     "type": "github",
     "url": "https://github.com/armand-colin/storaje"
   },
-  "private": false,
   "scripts": {
     "prepare": "tsc",
     "build": "tsc",

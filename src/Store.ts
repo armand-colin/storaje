@@ -1,6 +1,7 @@
 import { Observer } from "./Observer"
 import { ObserverAllManager } from "./ObserverAllManager"
 import { ObserverManager } from "./ObserverManager"
+import { Persistency } from "./persistency/Persistency"
 
 export function match<T extends { id: Store.Id }>(object: T, filter: Query<T>) {
     for (const key in filter) {
@@ -17,6 +18,7 @@ export class Store<T extends { id: Store.Id }> {
     _objects = new Map<Store.Id, T>()
     _observerManager = new ObserverManager<T>()
     _observerAllManager = new ObserverAllManager<T>()
+    _persistencies: Persistency<T>[] = []
 
     public get size() {
         return this._objects.size
@@ -24,6 +26,7 @@ export class Store<T extends { id: Store.Id }> {
 
     update(...objects: T[]) {
         const created: T[] = []
+        const updated: T[] = []
 
         let size = this._objects.size
 
@@ -32,12 +35,19 @@ export class Store<T extends { id: Store.Id }> {
             if (this._objects.size > size) {
                 size++
                 created.push(object)
+            } else {
+                updated.push(object)
             }
         }
 
         // Emit things
         this._observerManager.notifyUpdate(objects)
         this._observerAllManager.notifyUpdate(objects, this.getAll())
+
+        for (const persistency of this._persistencies) {
+            persistency.onCreate(created)
+            persistency.onUpdate(updated)
+        }
     }
 
     delete(...ids: Store.Id[]) {
@@ -51,6 +61,9 @@ export class Store<T extends { id: Store.Id }> {
         // Emit things
         this._observerManager.notifyDelete(deletedIds)
         this._observerAllManager.notifyDelete(ids, this.getAll())
+
+        for (const persistency of this._persistencies)
+            persistency.onDelete(deletedIds)
     }
 
     // Get single elements
@@ -98,6 +111,19 @@ export class Store<T extends { id: Store.Id }> {
         this._observerAllManager.add(observer, query)
 
         return observer
+    }
+
+    // Persistency
+    persistency(persistency: Persistency<T>) {
+        this._persistencies.push(persistency)
+    }
+
+    load(): Promise<void> {
+        return Promise.all(this._persistencies.map(persistency => persistency.load()))
+            .then((objectsArray) => {
+                this.update(...objectsArray.flat())
+                return undefined
+            })   
     }
 
 }
